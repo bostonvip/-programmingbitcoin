@@ -158,7 +158,7 @@ import helper
 
 '''
 # tag::exercise7[]
-==== Exercise 7
+==== Exercise 7 
 
 Write a function `little_endian_to_int` that takes Python bytes, interprets those bytes in little-endian, and returns the number.
 # end::exercise7[]
