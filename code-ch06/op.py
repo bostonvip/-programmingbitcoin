@@ -12,6 +12,7 @@ from helper import (
     hash256,
 )
 
+from helper import little_endian_to_int, int_to_little_endian
 
 # tag::source3[]
 def encode_num(num):
@@ -678,14 +679,18 @@ def op_checksig(stack, z):
         return False
 
     sec = stack.pop()
-    print (sec)
-    der = stack.pop() #[:-1]
-    print (der)
+    pubkey = S256Point.parse(sec)
+    # print (pubkey)
 
+    der = stack.pop()[:-1]
+    sig = Signature.parse(der)
+    # print (sig)
 
-    #sig = Signature.parse(der)
-
-    check = False #S256Point.verify(z, sig)
+    check = pubkey.verify(z, sig)
+    # print (check)
+    
+    stack.append(encode_num(check)) #int_to_little_endian(check,1))
+    
     return check
 
 
