@@ -185,8 +185,6 @@ class Tx:
             # serialize the input with input_index
             if tx_idx == input_index:
                 result += tx_in.serialize()
-            else:
-                result += tx_in.serialize()
         # encode_varint on the number of outputs
         result += encode_varint(len(self.tx_outs))
         # iterate outputs
@@ -198,11 +196,14 @@ class Tx:
         # add SIGHASH_ALL using int_to_little_endian in 4 bytes
         result += int_to_little_endian(SIGHASH_ALL, 4)
         # hash256 the serialization
+        z = int.from_bytes(hash256(result), 'big')
+        # convert the result to an integer using int.from_bytes(x, 'big')  
+        sighash = int.from_bytes(z, 'big')
         h256 = hash256(result)
         # convert the result to an integer using int.from_bytes(x, 'big')  
         z = int.from_bytes(h256, 'big')
-        
-        return z
+        return sighash                        
+
 
     def verify_input(self, input_index):
         '''Returns whether the input has a valid signature'''
