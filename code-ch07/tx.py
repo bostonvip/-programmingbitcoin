@@ -184,9 +184,10 @@ class Tx:
         for tx_idx, tx_in in enumerate(self.tx_ins):
             # serialize the input with input_index
             if tx_idx == input_index:
-                result += TxIn(tx_in.prev_tx, tx_in.prev_index, script_sig=prev_tx.tx_outs[tx_in.prev_index].script_pubkey, sequence=tx_in.sequence).serialize()
-            else:
-                prev_tx=tx_in.fetch_tx(testnet=True)
+                #prev_tx=tx_in.fetch_tx(testnet=True)
+                #result += TxIn(tx_in.prev_tx, tx_in.prev_index, script_sig=prev_tx.tx_outs[tx_in.prev_index].script_pubkey, sequence=tx_in.sequence).serialize()
+                result += TxIn(tx_in.prev_tx, tx_in.prev_index, script_sig=tx_in.script_pubkey(), sequence=tx_in.sequence).serialize()
+            else:          
                 result += TxIn(tx_in.prev_tx, tx_in.prev_index, script_sig=None, sequence=tx_in.sequence).serialize()
         # encode_varint on the number of outputs
         result += encode_varint(len(self.tx_outs))
@@ -208,11 +209,16 @@ class Tx:
     def verify_input(self, input_index):
         '''Returns whether the input has a valid signature'''
         # get the relevant input
+        tx_in = self.tx_ins[input_index]
         # grab the previous ScriptPubKey
+        prev_scriptpubkey = tx_in.script_pubkey()
         # get the signature hash (z)
+        
         # combine the current ScriptSig and the previous ScriptPubKey
+        
         # evaluate the combined script
-        raise NotImplementedError
+        
+        #raise NotImplementedError
 
     # tag::source2[]
     def verify(self):
